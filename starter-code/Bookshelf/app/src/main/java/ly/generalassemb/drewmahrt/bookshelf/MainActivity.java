@@ -1,6 +1,7 @@
 package ly.generalassemb.drewmahrt.bookshelf;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,9 +16,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import android.widget.*;
+
 
 public class MainActivity extends AppCompatActivity {
     BaseAdapter mBookAdapter;
+    ListView mListView ;
+    List<Book> mBookList;
 
     //TODO: Define your ListView
 
@@ -28,8 +33,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         //Use helper method to add books to the list
+        mListView = (ListView) findViewById(R.id.list);
         mBookList = generateBooks();
+
 
         //TODO: Instantiate BaseAdapter
         //Below is a partially complete example for one Adapter
@@ -51,12 +60,38 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
+
+                View view = convertView;
+                if (view == null){
+                    LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    view = inflater.inflate(android.R.layout.simple_list_item_2, null);
+                }
+
+                //sets the text to the title of the book within mBookList at position using getTitle()
+                TextView title = (TextView)view.findViewById(android.R.id.text1);
+                title.setText(mBookList.get(position).getTitle());
+
+                TextView text = (TextView)view.findViewById(android.R.id.text2);
+                text.setText(mBookList.get(position).getAuthor());
+
+
                 //TODO: Update the view
+                return view;
             }
         };
 
         //TODO: Set the ListView's adapter
+        mListView.setAdapter(mBookAdapter);
 
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                TextView title = (TextView)view.findViewById(android.R.id.text1);
+                title.setTextColor(Color.parseColor("#ff0000"));
+                TextView author = (TextView)view.findViewById(android.R.id.text2);
+                author.setTextColor(Color.parseColor("#ff0000"));
+            }
+        });
     }
 
     //Method to generate a list of Books
